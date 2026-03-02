@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flety Bot Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glass-container">
+        <div class="glow-sphere"></div>
+        <div class="glow-sphere-2"></div>
+        
+        <header>
+            <div class="logo-area">
+                <div class="status-indicator">
+                    <span id="status-dot"></span>
+                    <span id="status-text">DESCONECTADO</span>
+                </div>
+                <h1>FLETY<span>BOT</span></h1>
+            </div>
+            <p class="subtitle">Logística Inteligente en Tiempo Real</p>
+        </header>
+
+        <main>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Estado</span>
+                    <span class="stat-value" id="status-display">Inactivo</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Viajes</span>
+                    <span class="stat-value" id="trip-count">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Último Ciclo</span>
+                    <span class="stat-value" id="last-cycle">--:--</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="start-btn" class="btn btn-primary">
+                    <span class="icon">▶</span> INICIAR BOT
+                </button>
+                <button id="stop-btn" class="btn btn-secondary" disabled>
+                    <span class="icon">■</span> DETENER BOT
+                </button>
+            </div>
+
+            <div class="console-box">
+                <div class="console-header">
+                    <span>REGISTROS DEL SISTEMA</span>
+                    <button id="clear-log">Limpiar</button>
+                </div>
+                <div id="log-output" class="console-content">
+                    <div class="log-line system">> Bienvenido al panel de control de Flety Bot...</div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <span>Versión Pro 2.0</span>
+                <span class="divider">|</span>
+                <span>Protección de Código Activa</span>
+            </div>
+        </footer>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+</html>

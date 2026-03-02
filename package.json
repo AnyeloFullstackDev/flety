@@ -1,0 +1,30 @@
+{
+  "name": "flety-pro",
+  "version": "1.0.0",
+  "main": "main.js",
+  "pkg": {
+    "assets": [
+      ".env",
+      "ui/**/*",
+      "node_modules/playwright-core/**/*"
+    ],
+    "targets": [
+      "node22-win-x64"
+    ]
+  },
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "protect": "javascript-obfuscator bot-core.js --output bot-core-protected.js --compact true --self-defending true",
+    "pkg-build": "pkg . --output flety-bot.exe"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "node-telegram-bot-api": "^0.63.0",
+    "playwright": "^1.58.2"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "javascript-obfuscator": "^4.1.1"
+  }
+}
