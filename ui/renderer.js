@@ -1,5 +1,3 @@
-const { ipcRenderer } = require('electron');
-
 const startBtn = document.getElementById('start-btn');
 const stopBtn = document.getElementById('stop-btn');
 const logOutput = document.getElementById('log-output');
@@ -21,18 +19,29 @@ function addLog(message, type = '') {
     logOutput.scrollTop = logOutput.scrollHeight;
 }
 
-startBtn.addEventListener('click', () => {
-    ipcRenderer.send('start-bot');
+const isElectron = typeof require !== 'undefined' && require('electron');
+const ipc = isElectron ? require('electron').ipcRenderer : null;
+
+async function sendCommand(cmd) {
+    if (ipc) {
+        ipc.send(cmd === 'start' ? 'start-bot' : 'stop-bot');
+    } else {
+        await fetch(`/${cmd}`).catch(() => {});
+    }
+}
+
+startBtn.addEventListener('click', async () => {
+    await sendCommand('start');
     startBtn.disabled = true;
     stopBtn.disabled = false;
     logoArea.classList.add('status-online');
     statusText.textContent = 'EN LÍNEA';
     statusDisplay.textContent = 'Vigilando...';
-    addLog('Iniciando sistema de vigilancia...', 'system');
+    addLog('Iniciando sistema...', 'system');
 });
 
-stopBtn.addEventListener('click', () => {
-    ipcRenderer.send('stop-bot');
+stopBtn.addEventListener('click', async () => {
+    await sendCommand('stop');
     startBtn.disabled = false;
     stopBtn.disabled = true;
     logoArea.classList.remove('status-online');
@@ -46,23 +55,19 @@ clearLogBtn.addEventListener('click', () => {
     addLog('Registro limpiado.', 'system');
 });
 
-// Escuchar eventos desde el proceso principal (bot)
-ipcRenderer.on('bot-log', (event, { message, type }) => {
-    addLog(message, type);
+if (ipc) {
+    ipc.on('bot-log', (event, { message, type }) => {
+        addLog(message, type);
+        if (message.includes('VIAJE RESERVADO')) {
+            trips++;
+            tripCount.textContent = trips;
+        }
+        if (message.includes('Revisando viajes')) {
+            lastCycle.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+    });
 
-    // Actualizar estadísticas si es necesario
-    if (message.includes('VIAJE RESERVADO')) {
-        trips++;
-        tripCount.textContent = trips;
-        tripCount.classList.add('pulse');
-        setTimeout(() => tripCount.classList.remove('pulse'), 1000);
-    }
-
-    if (message.includes('Revisando viajes')) {
-        lastCycle.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-});
-
-ipcRenderer.on('bot-error', (event, message) => {
-    addLog(message, 'error');
-});
+    ipc.on('bot-error', (event, message) => {
+        addLog(message, 'error');
+    });
+}
